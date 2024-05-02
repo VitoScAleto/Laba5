@@ -10,7 +10,7 @@ const int  MAX_RACK = 20;
 const int  MAX_SHELF =  2;
 const int MAX_PPRODUCT = 10;
 const int MAX_NUMBER_OF_PRODUCTS_IN_STOCKS = 6000;
-
+int counter = 1;
 
 struct stock // склад
 {
@@ -38,13 +38,15 @@ bool IsValidInputAddProduct(string zone,int quantity, int Rack, int  Verticalrac
 
 bool IsValidAddProduct(vector <stock>& VectorZoneA, vector <stock>& VectorZoneB, vector <stock>& VectorZoneC, string NameProduct,string zone,int Rack,int VerticalRack,int shelf, int quantity)
 {
+	int totalQuantity = 0;
 	
-	for (auto& item : VectorZoneA)
+	for (auto &item : VectorZoneA)
 	{
 		if (item.zone == zone && item.Rack == Rack && item.Vertical_Rack == VerticalRack && item.shelf == shelf)
 		{
+			totalQuantity += item.quantity;
 			// Если есть, то проверяем, что новое количество вместе со старым не превышает 10
-			if (item.quantity + quantity <= MAX_PPRODUCT)
+			if (totalQuantity + quantity <= MAX_PPRODUCT)
 			{
 				item.quantity += quantity;
 			}
@@ -59,7 +61,9 @@ bool IsValidAddProduct(vector <stock>& VectorZoneA, vector <stock>& VectorZoneB,
 	{
 		if (item.zone == zone && item.Rack == Rack && item.Vertical_Rack == VerticalRack && item.shelf == shelf)
 		{
-			if (item.quantity + quantity <= MAX_PPRODUCT)
+			totalQuantity += item.quantity;
+			// Если есть, то проверяем, что новое количество вместе со старым не превышает 10
+			if (totalQuantity + quantity <= MAX_PPRODUCT)
 			{
 				item.quantity += quantity;
 			}
@@ -74,7 +78,9 @@ bool IsValidAddProduct(vector <stock>& VectorZoneA, vector <stock>& VectorZoneB,
 	{
 		if (item.zone == zone && item.Rack == Rack && item.Vertical_Rack == VerticalRack && item.shelf == shelf)
 		{
-			if (item.quantity + quantity <= MAX_PPRODUCT)
+			totalQuantity += item.quantity;
+			// Если есть, то проверяем, что новое количество вместе со старым не превышает 10
+			if (totalQuantity + quantity <= MAX_PPRODUCT)
 			{
 				item.quantity += quantity;
 			}
@@ -94,7 +100,6 @@ void AddProductInStock(vector <stock>& VectorZoneA,vector <stock> &VectorZoneB,v
 	// ввод данных и их проверка
 	string zone = "\0", NameProduct = "\0";
 	int quantity= 0, Rack = 0, VerticalRack = 0, shelf = 0;
-
 	do
 	{
 		cout << "\n>>> Enter the name product and his quantity(10) \n\n<<< ";
@@ -108,27 +113,30 @@ void AddProductInStock(vector <stock>& VectorZoneA,vector <stock> &VectorZoneB,v
 		{
 			cout << "\n>>> Error. Repeat input" << endl;
 		}
-		else
-		{
-			cout << "\n>>> Product added\n" << endl;
-		}
 	} while (IsValidInputAddProduct(zone, quantity,Rack, VerticalRack, shelf) != true);
 	// ввод данных и их проверка
-	
+	if (counter == 1)
+	{
+		if (zone == "A" )
+		{
+			VectorZoneA.push_back({ NameProduct,quantity,zone, Rack, VerticalRack, shelf });
+		}
+		if (zone == "B" )
+		{
+			VectorZoneB.push_back({ NameProduct,quantity,zone, Rack, VerticalRack, shelf });
+		}
+		if (zone == "C" )
+		{
+			VectorZoneC.push_back({ NameProduct,quantity,zone, Rack, VerticalRack, shelf });
+		}
+	}
 	//Добавление товаров на склад
-	if (zone == "A" && IsValidAddProduct(VectorZoneA,VectorZoneB, VectorZoneC,NameProduct,  zone, Rack,  VerticalRack,  shelf, quantity) == false)
+	if (counter > 1 && IsValidAddProduct(VectorZoneA, VectorZoneB, VectorZoneC, NameProduct, zone, Rack, VerticalRack, shelf, quantity) == false)
 	{
-		VectorZoneA.push_back({ NameProduct,quantity,zone, Rack, VerticalRack, shelf });
-	}
-	if (zone == "B" && IsValidAddProduct(VectorZoneA, VectorZoneB, VectorZoneC, NameProduct, zone, Rack, VerticalRack, shelf, quantity) == false)
-	{
-		VectorZoneB.push_back({ NameProduct,quantity,zone, Rack, VerticalRack, shelf });
-	}
-	if (zone == "C" && IsValidAddProduct(VectorZoneA, VectorZoneB, VectorZoneC, NameProduct, zone, Rack, VerticalRack, shelf, quantity) == false)
-	{
-		VectorZoneC.push_back({ NameProduct,quantity,zone, Rack, VerticalRack, shelf });
+		cout << "Error.Quantity on this shelf > 10. Repeat input" << endl;
 	}
 	// добавление товаров на склад
+	counter++;
 }
 
 
@@ -140,19 +148,20 @@ int main()
 	vector <stock> VectorZoneA;
 	vector <stock> VectorZoneB;
 	vector <stock> VectorZoneC;
-	int i = 0;
+	
 	while (true)
 	{
 		
 		AddProductInStock(VectorZoneA, VectorZoneB, VectorZoneC);
-		for (auto i : VectorZoneA)
+		for (auto &i : VectorZoneA)
 		{
 			cout <<"\n" << i.NameProduct << " " << i.zone << i.Rack << i.Vertical_Rack << i.shelf << " = " << i.quantity << endl;
 		}
-		for (auto i : VectorZoneB)
+		for (auto &i : VectorZoneB)
 		{
 			cout <<"\n" << i.NameProduct << " " << i.zone << i.Rack << i.Vertical_Rack << i.shelf << " = " << i.quantity << endl;
-		}for (auto i : VectorZoneC)
+		}
+		for (auto &i : VectorZoneC)
 		{
 			cout <<"\n" << i.NameProduct << " " << i.zone << i.Rack << i.Vertical_Rack << i.shelf << " = " << i.quantity << endl;
 		}
