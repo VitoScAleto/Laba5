@@ -45,6 +45,8 @@ struct Adress
 	}
 };
 
+
+
 bool IsValidInputAddProduct(string zone, int quantity, int Rack, int  Verticalrack, int shelf)// проверка на ввод допустимых значений
 {
 	if ((zone == "A" || zone == "B" || zone == "C") && Rack <= MAX_RACK && Verticalrack <= MAX_VERTICAL_RACK && shelf <= MAX_SHELF && quantity <= MAX_PPRODUCT)
@@ -92,6 +94,7 @@ bool IsValidAddProduct(vector <stock>& VectorStock, map<Adress, int>& MapAdress,
 			cout << "\n>>> Product added" << endl;
 		}
 	}
+	
 }
 
 void RemoveProduct(vector <stock>& VectorStock, map<Adress, int>& MapAdress)
@@ -155,6 +158,9 @@ void AddProductInStock(vector <stock>& VectorStock, map<Adress, int>& MapAdress)
 			cout << "\n>>> Error. Repeat input" << endl;
 		}
 	} while (IsValidInputAddProduct(zone, quantity, Rack, VerticalRack, shelf) != true);
+	
+	if (VectorStock.size() == 0) counter = 1;
+
 	// ввод данных и их проверка
 	if (counter == 1)
 	{
@@ -194,8 +200,8 @@ void INFO(vector <stock>& VectorStock)
 	workLoadStock = (counterProductsOnZoneA + counterProductsOnZoneB + counterProductsOnZoneC) * 100 / MAX_NUMBER_OF_PRODUCTS_IN_STOCKS;
 	cout << "\n>>> Загруженность склада = " << workLoadStock <<"%" << endl;
 	cout << "\n>>> Загруженность зоны А = " << (counterProductsOnZoneA * 100 )/ (MAX_RACK * MAX_PPRODUCT * MAX_VERTICAL_RACK * MAX_SHELF)<<"%" << endl;
-	cout << "\n>>> Загруженность зоны B = " << (counterProductsOnZoneA * 100) / (MAX_RACK * MAX_PPRODUCT * MAX_VERTICAL_RACK * MAX_SHELF)<<"%" << endl;
-	cout << "\n>>> Загруженность зоны C = " << (counterProductsOnZoneA * 100 )/ (MAX_RACK * MAX_PPRODUCT * MAX_VERTICAL_RACK * MAX_SHELF)<<"%" << endl;
+	cout << "\n>>> Загруженность зоны B = " << (counterProductsOnZoneB * 100) / (MAX_RACK * MAX_PPRODUCT * MAX_VERTICAL_RACK * MAX_SHELF)<<"%" << endl;
+	cout << "\n>>> Загруженность зоны C = " << (counterProductsOnZoneC * 100 )/ (MAX_RACK * MAX_PPRODUCT * MAX_VERTICAL_RACK * MAX_SHELF)<<"%" << endl;
 
 	cout << "\n>>> Товары на складе" << endl;
 	for (auto i : VectorStock)
@@ -214,10 +220,12 @@ int main()
 	map<Adress, int> MapAdress;
 
 	char s;
-	cout << "\n>>> A - ADD(добавление товара на склад) | R - REMOVE(удаление товара со склада) | I - INFO(информация о загруженности склада)" << endl;
+
 
 	while (true)
 	{
+		cout << "\n>>> A - ADD(добавление товара на склад) | R - REMOVE(удаление товара со склада) | I - INFO(информация о загруженности склада)" << endl;
+
 		cout << "\n>>> Выберите функцию" << endl;
 		cout << "<<< ";
 		cin >> s;
@@ -235,6 +243,7 @@ int main()
 		default:
 			return 0;
 		}
+		
 	}
 
 	return 0;
